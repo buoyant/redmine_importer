@@ -8,7 +8,7 @@ de:
   label_upload_wrapper: "Felder eingschlossen von:"
   
   label_load_rules: "Lade gespeicherte Regeln"
-  label_toplines: "Bezug auf die Top-Lines von {{value}}~Z"
+  label_toplines: "Bezug auf die Top-Lines von #{value}~Z"
   label_match_columns: "Zuordnung der Spalten"
   label_match_select: "Auswahl passender Felder"
   label_import_rule: "Import-Regeln"
@@ -24,10 +24,10 @@ de:
   label_rule_name: "Name der Input-Regel"
   
   label_import_result: "Import Ergebnis"
-  label_result_notice: "{{handle_count}} Tickets verarbeitet.  {{success_count}} Tickets erfolgreich importiert."
+  label_result_notice: "#{handle_count} Tickets verarbeitet.  #{success_count} Tickets erfolgreich importiert."
   label_result_projects: "Betroffene Projekte:"
-  label_result_issues: "{{count}} Tickets"
-  label_result_failed: "{{count}} fehlgeschlagene Reihen:"
+  label_result_issues: "#{count} Tickets"
+  label_result_failed: "#{count} fehlgeschlagene Reihen:"
   
   option_ignore: "Ignorieren"
   
@@ -36,4 +36,4 @@ de:
   button_save_rules_and_submit: "Abschicken und Abgleich-Regel speichern"
 
   text_rmi_specify_unique_field_for_update: "Ein eindeutiges Feld muss definiert sein, da die Einstellung für das Update von bestehenden Tickets gesetzt ist."
-  text_rmi_specify_unique_field_for_column: "Ein eindeutiges Feld muss definiert sein, da die Spalte {{column}} auf andere Tasks zeigen muss."
+  text_rmi_specify_unique_field_for_column: "Ein eindeutiges Feld muss definiert sein, da die Spalte #{column} auf andere Tasks zeigen muss."

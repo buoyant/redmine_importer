@@ -8,7 +8,7 @@ pt-BR:
   label_upload_wrapper: "Caracter em volta do nome:"
   
   label_load_rules: "Carregar regras salvas"
-  label_toplines: "Refere-se as linhas superiores de {{value}}："
+  label_toplines: "Refere-se as linhas superiores de #{value}："
   label_match_columns: "Mapeamento de Colunas"
   label_match_select: "Selecione o campo para cada coluna:"
   label_import_rule: "Regras de Importação"
@@ -24,10 +24,10 @@ pt-BR:
   label_rule_name: "Entre com o nome da regra"
   
   label_import_result: "Resultado da Importação"
-  label_result_notice: "{{handle_count}} tarefas processadas.  {{success_count}} tarefas importadas com sucesso."
+  label_result_notice: "#{handle_count} tarefas processadas.  #{success_count} tarefas importadas com sucesso."
   label_result_projects: "Projetos afetados:"
-  label_result_issues: "{{count}} tarefas"
-  label_result_failed: "{{count}} linhas falharam:"
+  label_result_issues: "#{count} tarefas"
+  label_result_failed: "#{count} linhas falharam:"
   
   option_ignore: "Ignorar"
   
