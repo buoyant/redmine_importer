@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'fastercsv'
 require 'tempfile'
 
 class MultipleIssuesForUniqueValue < Exception
@@ -59,8 +58,8 @@ class ImporterController < ApplicationController
     i = 0
     @samples = []
     
-    FasterCSV.new(iip.csv_data, {:headers=>true,
-    :encoding=>iip.encoding, :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
+    CSV.new(iip.csv_data, {:headers=>true,
+    :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
       @samples[i] = row
      
       i += 1
@@ -222,7 +221,7 @@ class ImporterController < ApplicationController
       return
     end
 
-    FasterCSV.new(iip.csv_data, {:headers=>true, :encoding=>iip.encoding, 
+    CSV.new(iip.csv_data, {:headers=>true, 
         :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
 
       project = Project.find_by_name(row[attrs_map["project"]])
