@@ -58,15 +58,20 @@ class ImporterController < ApplicationController
     i = 0
     @samples = []
     
-    CSV.new(iip.csv_data, {:headers=>true,
-    :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
-      @samples[i] = row
-     
-      i += 1
-      if i >= sample_count
-        break
-      end
-    end # do
+    begin
+      CSV.new(iip.csv_data, {:headers=>true,
+      :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
+        @samples[i] = row
+       
+        i += 1
+        if i >= sample_count
+          break
+        end
+      end # do
+    rescue Exception => ex
+      flash[:error] = "#{ex}"
+      render :index
+    end  
     
     if @samples.size > 0
       @headers = @samples[0].headers
@@ -480,8 +485,12 @@ class ImporterController < ApplicationController
 
 private
 
-  def find_project
-    @project = Project.find(params[:project_id])
+  def find_project     
+    if params[:project_id]
+      @project = Project.find(params[:project_id])  
+    else      
+      redirect_to "http://#{request.host_with_port}"
+    end 
   end
   
 end
