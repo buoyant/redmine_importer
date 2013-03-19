@@ -59,15 +59,20 @@ class ImporterController < ApplicationController
     i = 0
     @samples = []
     
-    FasterCSV.new(iip.csv_data, {:headers=>true,
-    :encoding=>iip.encoding, :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
-      @samples[i] = row
-     
-      i += 1
-      if i >= sample_count
-        break
-      end
-    end # do
+    begin
+      FasterCSV.new(iip.csv_data.force_encoding("ISO-8859-1").encode("UTF-8", replace: nil).strip, {:headers=>true,
+      :encoding=>iip.encoding, :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
+        @samples[i] = row
+       
+        i += 1
+        if i >= sample_count
+          break
+        end
+      end # do
+    rescue Exception => ex
+      flash[:error] = "#{ex}"
+      render :index
+    end
     
     if @samples.size > 0
       @headers = @samples[0].headers
@@ -222,7 +227,7 @@ class ImporterController < ApplicationController
       return
     end
 
-    FasterCSV.new(iip.csv_data, {:headers=>true, :encoding=>iip.encoding, 
+    FasterCSV.new(iip.csv_data.force_encoding("ISO-8859-1").encode("UTF-8", replace: nil).strip, {:headers=>true, :encoding=>iip.encoding, 
         :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
 
       project = Project.find_by_name(row[attrs_map["project"]])
@@ -482,7 +487,11 @@ class ImporterController < ApplicationController
 private
 
   def find_project
-    @project = Project.find(params[:project_id])
+    if params[:project_id]
+      @project = Project.find(params[:project_id])
+    else
+      redirect_to "http://#{request.host_with_port}"
+    end  
   end
   
 end
