@@ -60,7 +60,7 @@ class ImporterController < ApplicationController
     @samples = []
     
     begin
-      FasterCSV.new(iip.csv_data.force_encoding("ISO-8859-1").encode("UTF-8", replace: nil).strip, {:headers=>true,
+      FasterCSV.new(iip.csv_data, {:headers=>true,
       :encoding=>iip.encoding, :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
         @samples[i] = row
        
@@ -112,7 +112,7 @@ class ImporterController < ApplicationController
     if issues.size > 1
       @failed_count += 1
       @failed_issues[@failed_count] = row_data
-      flash.append(:warning,"Unique field #{unique_attr} with value '#{attr_value}' in issue #{@failed_count} has duplicate record")
+      flash[:error] = "Unique field #{unique_attr} with value '#{attr_value}' in issue #{@failed_count} has duplicate record"
       raise MultipleIssuesForUniqueValue, "Unique field #{unique_attr} with value '#{attr_value}' has duplicate record"
       else
       if issues.size == 0
@@ -227,7 +227,7 @@ class ImporterController < ApplicationController
       return
     end
 
-    FasterCSV.new(iip.csv_data.force_encoding("ISO-8859-1").encode("UTF-8", replace: nil).strip, {:headers=>true, :encoding=>iip.encoding, 
+    FasterCSV.new(iip.csv_data, {:headers=>true, :encoding=>iip.encoding, 
         :quote_char=>iip.quote_char, :col_sep=>iip.col_sep}).each do |row|
 
       project = Project.find_by_name(row[attrs_map["project"]])
@@ -259,7 +259,7 @@ class ImporterController < ApplicationController
       rescue ActiveRecord::RecordNotFound
         @failed_count += 1
         @failed_issues[@failed_count] = row
-        flash.append(:warning,"When adding issue #{@failed_count} below, the #{@unfound_class} #{@unfound_key} was not found")
+        flash[:error] = "When adding issue #{@failed_count} below, the #{@unfound_class} #{@unfound_key} was not found"
         next
       end
 
@@ -308,14 +308,14 @@ class ImporterController < ApplicationController
           else
             @failed_count += 1
             @failed_issues[@failed_count] = row
-            flash.append(:warning,"Could not update issue #{@failed_count} below, no match for the value #{row[unique_field]} were found")
+            flash[:error] = "Could not update issue #{@failed_count} below, no match for the value #{row[unique_field]} were found"
             next
           end
           
         rescue MultipleIssuesForUniqueValue
           @failed_count += 1
           @failed_issues[@failed_count] = row
-          flash.append(:warning,"Could not update issue #{@failed_count} below, multiple matches for the value #{row[unique_field]} were found")
+          flash[:error] = "Could not update issue #{@failed_count} below, multiple matches for the value #{row[unique_field]} were found"
           next
         end
       end
@@ -354,13 +354,13 @@ class ImporterController < ApplicationController
         else
           @failed_count += 1
           @failed_issues[@failed_count] = row
-          flash.append(:warning,"When setting the parent for issue #{@failed_count} below, no matches for the value #{parent_value} were found")
+          flash[:error] = "When setting the parent for issue #{@failed_count} below, no matches for the value #{parent_value} were found"
           next
         end
       rescue MultipleIssuesForUniqueValue
         @failed_count += 1
         @failed_issues[@failed_count] = row
-        flash.append(:warning,"When setting the parent for issue #{@failed_count} below, multiple matches for the value #{parent_value} were found")
+        flash[:error] = "When setting the parent for issue #{@failed_count} below, multiple matches for the value #{parent_value} were found"
         next
       end
 
@@ -383,7 +383,7 @@ class ImporterController < ApplicationController
               @failed_count += 1
               @failed_issues[@failed_count] = row
             end
-            flash.append(:warning,"When trying to set custom field #{cf.name} on issue #{@failed_count} below, value #{value} was invalid")
+            flash[:error] = "When trying to set custom field #{cf.name} on issue #{@failed_count} below, value #{value} was invalid"
           end
         end
         h
@@ -409,7 +409,7 @@ class ImporterController < ApplicationController
               @failed_issues[@failed_count] = row
             end
             watcher_failed_count += 1
-            flash.append(:warning,"When trying to add watchers on issue #{@failed_count} below, User #{watcher} was not found")
+            flash[:error] = "When trying to add watchers on issue #{@failed_count} below, User #{watcher} was not found"
           end
         end
       end
@@ -419,9 +419,9 @@ class ImporterController < ApplicationController
         # 记录错误
         @failed_count += 1
         @failed_issues[@failed_count] = row
-        flash.append(:warning,"The following data-validation errors occurred on issue #{@failed_count} in the list below")
+        flash[:error] = "The following data-validation errors occurred on issue #{@failed_count} in the list below"
         issue.errors.each do |attr, error_message|
-          flash.append(:warning,"&nbsp;&nbsp;"+error_message)
+          flash[:error] = "&nbsp;&nbsp;"+error_message
         end
       else
         if unique_field
